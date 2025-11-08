@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adaptive Personalized Cardiology Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f6f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-gap: 20px;
+      width: 95%;
+      max-width: 1200px;
+      margin-top: 20px;
+    }
+
+    .ecg-graph, .metrics, .heart-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .ecg-graph {
+      grid-column: 1 / 2;
+      height: 300px;
+    }
+
+    .metrics {
+      grid-column: 2 / 3;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    /* New 3D Heart Box */
+    .heart-box {
+      grid-column: 1 / 2;
+      grid-row: 2 / 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 300px;
+      background: #ffe5e5;
+    }
+
+    .heart-box h2 {
+      margin-bottom: 10px;
+      font-size: 22px;
+      color: #d32f2f;
+    }
+
+    .heart {
+      width: 120px;
+      height: 120px;
+      background: red;
+      transform: rotate(-45deg);
+      position: relative;
+      animation: beat 1s infinite;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background: red;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -60px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: 60px;
+      top: 0;
+    }
+
+    @keyframes beat {
+      0%, 100% { transform: scale(1) rotate(-45deg); }
+      50% { transform: scale(1.2) rotate(-45deg); }
+    }
+
+    /* Simple styling for AI Prediction */
+    .bpm-text {
+      margin-top: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #b71c1c;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Adaptive Personalized Cardiology Dashboard</h1>
+
+  <div class="dashboard">
+    <!-- ECG Graph -->
+    <div class="ecg-graph" id="ecgGraph">
+      <h2>Live ECG Graph</h2>
+      <!-- Replace with actual ECG graph from dataset -->
+      <canvas id="ecgCanvas" width="600" height="280"></canvas>
+    </div>
+
+    <!-- Adaptive Metrics -->
+    <div class="metrics">
+      <div><strong>Heart Rate:</strong> <span id="heartRate">--</span> BPM</div>
+      <div><strong>Blood Pressure:</strong> <span id="bloodPressure">--</span> mmHg</div>
+      <div><strong>Cholesterol Level:</strong> <span id="cholesterol">--</span> mg/dL</div>
+      <div><strong>Body Mass Index:</strong> <span id="bmi">--</span></div>
+    </div>
+
+    <!-- New 3D Heart Box -->
+    <div class="heart-box">
+      <h2>3D Heart</h2>
+      <div class="heart"></div>
+      <div class="bpm-text" id="heartBPM">BPM: 75</div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Fake ECG Data Example
+    const canvas = document.getElementById('ecgCanvas');
+    const ctx = canvas.getContext('2d');
+    let x = 0;
+
+    function drawECG() {
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = '#d32f2f';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let i = 0; i < canvas.width; i++) {
+        const y = 140 + 50 * Math.sin((i + x) * 0.05);
+        if (i === 0) ctx.moveTo(i, y);
+        else ctx.lineTo(i, y);
+      }
+      ctx.stroke();
+      x += 1;
+      requestAnimationFrame(drawECG);
+    }
+    drawECG();
+
+    // Simulate AI predicted BPM update
+    function updateBPM() {
+      const bpm = 70 + Math.floor(Math.random() * 15); // Random between 70-85
+      document.getElementById('heartBPM').innerText = `BPM: ${bpm}`;
+      document.getElementById('heartRate').innerText = bpm;
+    }
+    setInterval(updateBPM, 2000);
+
+    // Example: Update metrics randomly
+    function updateMetrics() {
+      document.getElementById('bloodPressure').innerText = `${110 + Math.floor(Math.random()*20)}/${70 + Math.floor(Math.random()*10)}`;
+      document.getElementById('cholesterol').innerText = 150 + Math.floor(Math.random()*50);
+      document.getElementById('bmi').innerText = (18 + Math.random()*7).toFixed(1);
+    }
+    setInterval(updateMetrics, 5000);
+  </script>
+
+</body>
+</html>
